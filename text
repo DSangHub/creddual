@@ -31,3 +31,18 @@ creddual/
 │   │   └── App.js
 │   └── package.json
 └── docker-compose.yml
+frontend/
+├── public/
+│   ├── index.html          ← Entry point
+│   ├── favicon.ico
+│   └── robots.txt
+├── src/
+│   ├── index.js            ← React entry
+│   ├── App.js
+│   ├── components/
+│   ├── pages/
+│   ├── contexts/
+│   └── services/
+├── vercel.json             ← Vercel config
+├── package.json
+└── tailwind.config.js
