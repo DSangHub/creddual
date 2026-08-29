@@ -1,0 +1,193 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  role          Role           @default(CONSUMER)
+  firstName     String
+  lastName      String
+  phone         String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  // Relations
+  consumer      Consumer?
+  merchant      Merchant?
+  financialInst FinancialInstitution?
+  transactions  Transaction[]
+  rewardClaims  RewardClaim[]
+}
+
+enum Role {
+  CONSUMER
+  MERCHANT
+  FI
+  ADMIN
+}
+
+model Consumer {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  debitCardLast4    String?
+  bankAccountId     String?
+  linkedBank        String?
+  monthlySpend      Float    @default(0)
+  weeklySpend       Float    @default(0)
+  totalRewards      Float    @default(0)
+  minMonthlySpend   Float    @default(100)
+  minWeeklySpend    Float    @default(25)
+  spendPeriodStart  DateTime @default(now())
+  rewardsEligible   Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  transactions      Transaction[]
+  rewardClaims      RewardClaim[]
+  rewardHistory     RewardHistory[]
+}
+
+model Merchant {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  businessName      String
+  businessType      String
+  taxId             String?
+  address           String
+  city              String
+  state             String
+  zipCode           String
+  website           String?
+  phone             String
+  isVerified        Boolean  @default(false)
+  totalSales        Float    @default(0)
+  totalRewardsGiven Float    @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  products          Product[]
+  transactions      Transaction[]
+}
+
+model FinancialInstitution {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  institutionName   String
+  institutionType   String   // Bank, Credit Union
+  routingNumber     String?
+  address           String
+  city              String
+  state             String
+  zipCode           String
+  referralFee       Float    @default(100) // Fee per new account
+  totalReferrals    Int      @default(0)
+  totalRevenue      Float    @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  bankAccounts      BankAccount[]
+}
+
+model BankAccount {
+  id                String   @id @default(cuid())
+  fiId              String
+  fi                FinancialInstitution @relation(fields: [fiId], references: [id])
+  accountHolderId   String
+  accountNumber     String   @unique
+  routingNumber     String
+  accountType       String   // Checking, Savings
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  consumer          Consumer?
+}
+
+model Product {
+  id                String   @id @default(cuid())
+  merchantId        String
+  merchant          Merchant @relation(fields: [merchantId], references: [id])
+  name              String
+  description       String
+  category          String
+  originalPrice     Float
+  discountedPrice   Float?
+  rewardPercentage  Float    @default(5) // % back in rewards
+  inventory         Int
+  isSeasonal        Boolean  @default(false)
+  isDiscontinued    Boolean  @default(false)
+  isSlowMoving      Boolean  @default(false)
+  images            String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  transactions      Transaction[]
+}
+
+model Transaction {
+  id                String   @id @default(cuid())
+  consumerId        String
+  consumer          Consumer @relation(fields: [consumerId], references: [id])
+  merchantId        String
+  merchant          Merchant @relation(fields: [merchantId], references: [id])
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id])
+  amount            Float
+  rewardEarned      Float
+  transactionType   String   // DEBIT, CREDIT
+  status            String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  referenceId       String   @unique
+  createdAt         DateTime @default(now())
+}
+
+model RewardClaim {
+  id                String   @id @default(cuid())
+  consumerId        String
+  consumer          Consumer @relation(fields: [consumerId], references: [id])
+  amount            Float
+  status            String   @default("PENDING") // PENDING, APPROVED, REDEEMED
+  rewardType        String   // POINTS, DISCOUNT, CASHBACK
+  description       String?
+  expiresAt         DateTime?
+  claimedAt         DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model RewardHistory {
+  id                String   @id @default(cuid())
+  consumerId        String
+  consumer          Consumer @relation(fields: [consumerId], references: [id])
+  merchantId        String?
+  merchant          Merchant? @relation(fields: [merchantId], references: [id])
+  amount            Float
+  action            String   // EARNED, REDEEMED, EXPIRED
+  description       String
+  createdAt         DateTime @default(now())
+}
+
+model PartnerBankReferral {
+  id                String   @id @default(cuid())
+  fiId              String
+  fi                FinancialInstitution @relation(fields: [fiId], references: [id])
+  consumerId        String
+  consumer          Consumer @relation(fields: [consumerId], references: [id])
+  status            String   @default("PENDING") // PENDING, APPROVED, COMPLETED
+  referralFee       Float
+  completedAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
