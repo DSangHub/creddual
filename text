@@ -1,0 +1,5 @@
+├── Frontend: React + Tailwind CSS
+├── Backend: Node.js + Express
+├── Database: PostgreSQL (with Prisma ORM)
+├── Authentication: JWT-based
+└── Hosting: Any cloud platform
