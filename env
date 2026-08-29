@@ -1,0 +1,27 @@
+# .env
+
+# Database
+DATABASE_URL="postgresql://postgres:password@localhost:5432/creddual"
+
+# JWT
+JWT_SECRET="your-secret-key-change-this-in-production"
+
+# Server
+PORT=5000
+NODE_ENV=development
+FRONTEND_URL="http://localhost:3000"
+
+# Email (for notifications)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="your-email@gmail.com"
+SMTP_PASS="your-app-password"
+
+# Payment (if integrating with Stripe or similar)
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+
+# Optional: Plaid for bank integration
+PLAID_CLIENT_ID="..."
+PLAID_SECRET="..."
+PLAID_ENV="sandbox"
