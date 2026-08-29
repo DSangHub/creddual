@@ -8,3 +8,10 @@ npm startcd frontend
 npx create-react-app .
 npm install axios react-router-dom lucide-react tailwindcss
 npm start
+# Backend
+cd backend
+npm run build
+
+# Frontend
+cd frontend
+npm run build
