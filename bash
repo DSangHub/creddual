@@ -15,3 +15,26 @@ npm run build
 # Frontend
 cd frontend
 npm run build
+# 1. Build the project locally (verify it works)
+cd frontend
+npm run build
+
+# 2. Test the build
+npx serve -s build
+
+# 3. Deploy to Vercel
+npx vercel --prod
+
+# Or using Vercel CLI after login
+vercel --prod
+
+# If you have issues, deploy with force
+vercel --prod --force# Frontend
+cd frontend
+npm install
+npm run build
+vercel --prod
+
+# Backend (separate Vercel project)
+cd backend
+vercel --prod
