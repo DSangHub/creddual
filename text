@@ -3,3 +3,31 @@
 ├── Database: PostgreSQL (with Prisma ORM)
 ├── Authentication: JWT-based
 └── Hosting: Any cloud platform
+creddual/
+├── backend/
+│   ├── src/
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   ├── consumers/
+│   │   │   ├── merchants/
+│   │   │   ├── financial-institutions/
+│   │   │   └── rewards/
+│   │   ├── models/
+│   │   ├── middleware/
+│   │   ├── utils/
+│   │   └── app.js
+│   ├── prisma/
+│   │   └── schema.prisma
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   │   ├── consumer/
+│   │   │   ├── merchant/
+│   │   │   └── financial-institution/
+│   │   ├── contexts/
+│   │   ├── services/
+│   │   └── App.js
+│   └── package.json
+└── docker-compose.yml
