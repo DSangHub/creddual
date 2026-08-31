@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import BankLink from './BankLink';
 import { 
   CreditCard, 
   ShoppingBag, 
@@ -126,6 +127,8 @@ const Landing = () => {
           </div>
         </div>
       </section>
+
+      <BankLink />
 
       {/* Features Grid */}
       <section className="py-16 bg-white">
