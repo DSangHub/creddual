@@ -22,8 +22,6 @@ model User {
   consumer      Consumer?
   merchant      Merchant?
   financialInst FinancialInstitution?
-  transactions  Transaction[]
-  rewardClaims  RewardClaim[]
 }
 
 enum Role {
@@ -53,6 +51,7 @@ model Consumer {
   transactions      Transaction[]
   rewardClaims      RewardClaim[]
   rewardHistory     RewardHistory[]
+  bankReferrals     PartnerBankReferral[]
 }
 
 model Merchant {
@@ -76,6 +75,7 @@ model Merchant {
   
   products          Product[]
   transactions      Transaction[]
+  rewardHistory     RewardHistory[]
 }
 
 model FinancialInstitution {
@@ -97,6 +97,7 @@ model FinancialInstitution {
   updatedAt         DateTime @updatedAt
   
   bankAccounts      BankAccount[]
+  referrals         PartnerBankReferral[]
 }
 
 model BankAccount {
@@ -110,8 +111,6 @@ model BankAccount {
   isActive          Boolean  @default(true)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  
-  consumer          Consumer?
 }
 
 model Product {
